@@ -1,0 +1,1742 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Waltinho & Banda | WM Produções — Santarém/PA</title>
+  <meta name="description" content="Presença obrigatória nos melhores eventos! Mais de 30 anos de estrada em Santarém e região. Banda baile completa, som, iluminação, palco, telões de LED, Pista Paris e estrutura completa.">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Syne (Display), Plus Jakarta Sans (Body), JetBrains Mono (Rider Técnico), Kaushan Script (Tipografia Logo) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Kaushan+Script&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Syne', 'sans-serif'],
+            logo: ['"Kaushan Script"', 'cursive'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            stage: {
+              bg: '#08080c',
+              card: '#101017',
+              border: '#1f1f2e',
+              blue: '#1d4ed8',
+              purple: '#6d28d9',
+              pink: '#db2777',
+              red: '#ef4444',
+              gold: '#facc15'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Textura sutil de ruído de palco / vinil */
+    body {
+      background-color: #08080c;
+      color: #f4f4f6;
+      overflow-x: hidden;
+    }
+
+    .noise-overlay {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 50;
+      opacity: 0.032;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+    }
+
+    /* Gradiente fiel à logo Waltinho Mattos Produções (Vermelho para Amarelo) */
+    .logo-text-gradient {
+      background: linear-gradient(180deg, #ef4444 15%, #f97316 55%, #facc15 95%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Feixes de iluminação dinâmica do palco */
+    .stage-beam {
+      transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Barra de LED DMX dentro do console */
+    .dmx-led-bar {
+      transition: background 0.6s ease, box-shadow 0.6s ease;
+    }
+
+    /* Estilo de Console / Rider Card */
+    .rider-item {
+      transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .rider-item:hover {
+      transform: translateY(-2px);
+    }
+    .rider-item.selected {
+      background: linear-gradient(135deg, rgba(29, 78, 216, 0.16), rgba(219, 39, 119, 0.16));
+      border-color: #facc15;
+      box-shadow: 0 0 24px -6px rgba(250, 204, 21, 0.25);
+    }
+
+    /* Barra de rolagem customizada */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #08080c;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27273a;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #6d28d9;
+    }
+
+    /* Animação do equalizador ao vivo */
+    @keyframes eqPulse {
+      0%, 100% { height: 25%; }
+      50% { height: 100%; }
+    }
+    .eq-bar {
+      animation: eqPulse 0.9s ease-in-out infinite;
+    }
+    .eq-bar:nth-child(2) { animation-delay: 0.2s; animation-duration: 0.7s; }
+    .eq-bar:nth-child(3) { animation-delay: 0.4s; animation-duration: 1.1s; }
+    .eq-bar:nth-child(4) { animation-delay: 0.1s; animation-duration: 0.8s; }
+
+    /* Animação sutil para o botão flutuante inteligente ao atualizar itens */
+    @keyframes floatPop {
+      0% { transform: scale(1); }
+      45% { transform: scale(1.06); }
+      100% { transform: scale(1); }
+    }
+    .float-pop {
+      animation: floatPop 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Entrada suave de novos depoimentos */
+    @keyframes fadeSlideUp {
+      from {
+        opacity: 0;
+        transform: translateY(14px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    .review-card-enter {
+      animation: fadeSlideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-stage-pink selection:text-white">
+
+  <div class="noise-overlay"></div>
+
+  <!-- Notificação Toast Flutuante -->
+  <div id="toast" class="fixed top-5 right-5 z-50 transform translate-x-full opacity-0 transition-all duration-300 pointer-events-none">
+    <div class="bg-[#14141f] border border-stage-gold/60 text-white px-4 py-3 rounded-xl shadow-2xl flex items-center gap-3 backdrop-blur-md">
+      <span class="w-2.5 h-2.5 rounded-full bg-stage-gold animate-ping"></span>
+      <p id="toast-msg" class="text-sm font-medium"></p>
+    </div>
+  </div>
+
+  <!-- HEADER / NAVEGAÇÃO DE BACKSTAGE -->
+  <header class="sticky top-0 z-40 border-b border-white/10 bg-[#08080c]/85 backdrop-blur-xl">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between gap-4">
+      <!-- Marca com Logo Original -->
+      <a href="#topo" class="flex items-center gap-3 group">
+        <div class="w-12 h-12 rounded-full p-[1.5px] bg-gradient-to-tr from-stage-blue via-stage-purple to-stage-pink shadow-lg shadow-stage-purple/30 shrink-0 overflow-hidden">
+          <svg viewBox="0 0 120 120" class="w-full h-full rounded-full" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Waltinho Mattos Produções">
+            <defs>
+              <radialGradient id="logoBgNav" cx="50%" cy="50%" r="70%">
+                <stop offset="35%" stop-color="#0b0814"/>
+                <stop offset="100%" stop-color="#1a0b2e"/>
+              </radialGradient>
+              <radialGradient id="glowBlueNav" cx="15%" cy="15%" r="55%">
+                <stop offset="0%" stop-color="#0284c7" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="#0284c7" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="glowPinkNav" cx="85%" cy="20%" r="55%">
+                <stop offset="0%" stop-color="#e11d48" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="#e11d48" stop-opacity="0"/>
+              </radialGradient>
+              <radialGradient id="glowPurpleNav" cx="50%" cy="90%" r="60%">
+                <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.85"/>
+                <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="textGradNav" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="10%" stop-color="#ef4444"/>
+                <stop offset="55%" stop-color="#f97316"/>
+                <stop offset="95%" stop-color="#facc15"/>
+              </linearGradient>
+            </defs>
+            <rect width="120" height="120" fill="url(#logoBgNav)"/>
+            <rect width="120" height="120" fill="url(#glowBlueNav)"/>
+            <rect width="120" height="120" fill="url(#glowPinkNav)"/>
+            <rect width="120" height="120" fill="url(#glowPurpleNav)"/>
+            <text x="60" y="57" text-anchor="middle" font-family="'Kaushan Script', cursive" font-size="17.5" fill="url(#textGradNav)" stroke="#27272a" stroke-width="0.6" paint-order="stroke">Waltinho Mattos</text>
+            <text x="60" y="75" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11.5" fill="#ffffff" letter-spacing="0.3">Produções</text>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-display font-extrabold text-base sm:text-lg tracking-tight text-white group-hover:text-stage-gold transition-colors">
+              WALTINHO & BANDA
+            </span>
+          </div>
+          <span class="block font-mono text-[11px] text-zinc-400 tracking-wider uppercase">
+            WM Produções • Santarém/PA
+          </span>
+        </div>
+      </a>
+
+      <!-- Links Desktop -->
+      <nav class="hidden md:flex items-center gap-7 text-sm font-medium text-zinc-300">
+        <a href="#simulador" class="hover:text-stage-gold transition-colors flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full bg-stage-pink"></span>
+          Monte seu Evento
+        </a>
+        <a href="#banda" class="hover:text-stage-gold transition-colors">A Banda & Repertório</a>
+        <a href="#depoimentos" class="hover:text-stage-gold transition-colors">Depoimentos</a>
+        <a href="#regiao" class="hover:text-stage-gold transition-colors">Onde Atendemos</a>
+        <a href="#contato" class="hover:text-stage-gold transition-colors">Contato</a>
+      </nav>
+
+      <!-- Ação Rápida -->
+      <div class="flex items-center gap-2 sm:gap-3">
+        <a href="https://instagram.com/waltinhoebanda" target="_blank" rel="noopener noreferrer" aria-label="Instagram oficial @waltinhoebanda" class="p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-stage-pink transition-all">
+          <i data-lucide="instagram" class="w-5 h-5"></i>
+        </a>
+        <a href="#simulador" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-stage-blue via-stage-purple to-stage-pink hover:brightness-110 text-white font-semibold text-xs sm:text-sm shadow-lg shadow-stage-purple/30 transition-all flex items-center gap-2">
+          <span>Pedir Orçamento</span>
+          <span id="nav-badge" class="hidden px-1.5 py-0.5 text-[11px] font-mono font-bold bg-stage-gold text-black rounded-md">0</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 1. HERO DE PALCO INTERATIVO -->
+  <section id="topo" class="relative pt-10 pb-16 sm:pt-16 sm:pb-24 overflow-hidden border-b border-white/10">
+    <!-- Iluminação Dinâmica de Palco (Muda intensamente conforme a vibe selecionada) -->
+    <div id="beam-left" class="stage-beam absolute -top-24 -left-24 w-[480px] h-[480px] sm:w-[720px] sm:h-[720px] rounded-full bg-pink-500/40 blur-[110px] pointer-events-none"></div>
+    <div id="beam-center" class="stage-beam absolute top-6 left-1/2 -translate-x-1/2 w-[420px] h-[420px] sm:w-[680px] sm:h-[680px] rounded-full bg-rose-400/35 blur-[120px] pointer-events-none"></div>
+    <div id="beam-right" class="stage-beam absolute -bottom-24 -right-24 w-[480px] h-[480px] sm:w-[720px] sm:h-[720px] rounded-full bg-amber-300/35 blur-[110px] pointer-events-none"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+        
+        <!-- Coluna Principal -->
+        <div class="lg:col-span-7 space-y-6">
+          <!-- Badge de Tradição -->
+          <div class="inline-flex flex-wrap items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-white/[0.04] border border-white/15 backdrop-blur-md">
+            <div class="flex items-end gap-0.5 h-3.5 w-3.5">
+              <span class="eq-bar w-0.5 bg-stage-gold rounded-full"></span>
+              <span class="eq-bar w-0.5 bg-stage-red rounded-full"></span>
+              <span class="eq-bar w-0.5 bg-stage-pink rounded-full"></span>
+              <span class="eq-bar w-0.5 bg-stage-blue rounded-full"></span>
+            </div>
+            <span class="font-mono text-xs font-semibold tracking-wider text-stage-gold uppercase">
+              +30 Anos de Palco e Produção
+            </span>
+            <span class="text-zinc-600">•</span>
+            <span class="font-mono text-xs text-zinc-300">STM / PA</span>
+          <!-- Título Monumental com Tipografia Original da Logo -->
+          <div>
+            <h1 class="leading-[1.08] tracking-normal">
+              <span class="block font-logo text-5xl sm:text-7xl lg:text-[76px] logo-text-gradient drop-shadow-[0_4px_18px_rgba(239,68,68,0.28)] pr-2">
+                Waltinho Mattos
+              </span>
+              <span class="block font-sans font-bold text-white text-2xl sm:text-4xl lg:text-[38px] mt-1 tracking-tight">
+                Produções <span class="text-zinc-500 font-normal mx-1">•</span> <span class="font-display font-extrabold text-xl sm:text-3xl text-zinc-100">Waltinho & Banda</span>
+              </span>
+            </h1>
+            <p class="mt-4 text-lg sm:text-xl font-medium text-stage-gold/95 flex items-center gap-2">
+              <i data-lucide="flame" class="w-5 h-5 text-stage-red shrink-0"></i>
+              <span>“Presença obrigatória nos melhores eventos!”</span>
+            </p>
+          </div>
+
+          <p class="text-zinc-300 text-base sm:text-lg leading-relaxed max-w-2xl">
+            Muito mais que show ao vivo: entregamos a experiência completa. Da <strong class="text-white">banda baile com repertório 100% escolhido por você</strong> até <strong class="text-white">palco, sonorização, iluminação, painéis de LED, Pista Paris, efeitos especiais e gerador próprio</strong> em Santarém e toda a região.
+          </p>
+
+          <!-- CTAs Principais -->
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5 pt-2">
+            <a href="#simulador" class="px-6 py-4 rounded-2xl bg-gradient-to-r from-stage-red via-orange-500 to-stage-gold text-zinc-950 font-display font-extrabold text-sm sm:text-base tracking-wide uppercase shadow-xl shadow-stage-red/20 hover:brightness-105 transition-all flex items-center justify-center gap-2.5">
+              <i data-lucide="sliders" class="w-5 h-5"></i>
+              <span>Montar meu Evento Agora</span>
+            </a>
+            <a href="https://wa.me/5593991997960?text=Ol%C3%A1%20Rosa!%20Vim%20pelo%20site%20da%20Waltinho%20%26%20Banda%20/%20WM%20Produ%C3%A7%C3%B5es%20e%20gostaria%20de%20fazer%20um%20or%C3%A7amento." target="_blank" rel="noopener noreferrer" class="px-6 py-4 rounded-2xl bg-white/[0.06] hover:bg-white/[0.11] border border-white/15 text-white font-semibold text-sm sm:text-base transition-all flex items-center justify-center gap-2.5">
+              <i data-lucide="message-circle" class="w-5 h-5 text-emerald-400"></i>
+              <span>Falar com Rosa no WhatsApp</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Coluna Direita: Console de Luz & Clima do Show -->
+        <div class="lg:col-span-5">
+          <div id="dmx-console-card" class="rounded-3xl bg-[#0e0e16]/90 border border-pink-500/40 p-5 sm:p-6 backdrop-blur-xl shadow-2xl relative overflow-hidden transition-all duration-700">
+            <!-- Barra de LED DMX superior que muda de cor -->
+            <div id="dmx-top-strip" class="dmx-led-bar absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-pink-500 via-rose-300 to-amber-300 shadow-[0_0_20px_rgba(244,114,182,0.8)]"></div>
+
+            <!-- Barra superior estilo mesa DMX -->
+            <div class="flex items-center justify-between pb-4 mb-4 border-b border-white/10 pt-1">
+              <div class="flex items-center gap-2">
+                <span id="dmx-dot-1" class="w-3 h-3 rounded-full bg-pink-400 shadow-[0_0_10px_#f472b6] transition-all duration-500"></span>
+                <span id="dmx-dot-2" class="w-3 h-3 rounded-full bg-rose-300 shadow-[0_0_10px_#fda4af] transition-all duration-500"></span>
+                <span id="dmx-dot-3" class="w-3 h-3 rounded-full bg-amber-300 shadow-[0_0_10px_#fcd34d] transition-all duration-500"></span>
+                <span class="ml-2 font-mono text-xs text-zinc-300 uppercase tracking-wider">Mesa de Luz // Simulador</span>
+              </div>
+              <span id="dmx-channel-badge" class="font-mono text-[11px] px-2 py-0.5 rounded bg-pink-500/20 text-pink-200 border border-pink-400/30 transition-all duration-500">CENA 01</span>
+            </div>
+
+            <p class="text-xs font-mono uppercase tracking-wider text-zinc-400 mb-3">
+              Toque para testar a iluminação do seu evento:
+            </p>
+
+            <!-- Botões de Vibe -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-5" id="vibe-selector">
+              <button type="button" data-vibe="casamento" class="vibe-btn active px-3 py-2.5 rounded-xl text-xs font-semibold border text-left transition-all flex items-center gap-2 bg-white/10 border-stage-gold text-white">
+                <span>💍</span> Casamento
+              </button>
+              <button type="button" data-vibe="15anos" class="vibe-btn px-3 py-2.5 rounded-xl text-xs font-semibold border border-white/10 bg-white/[0.03] text-zinc-300 hover:bg-white/[0.08] text-left transition-all flex items-center gap-2">
+                <span>👑</span> 15 Anos
+              </button>
+              <button type="button" data-vibe="carnaval" class="vibe-btn px-3 py-2.5 rounded-xl text-xs font-semibold border border-white/10 bg-white/[0.03] text-zinc-300 hover:bg-white/[0.08] text-left transition-all flex items-center gap-2">
+                <span>🎭</span> Carnaval
+              </button>
+              <button type="button" data-vibe="reveillon" class="vibe-btn px-3 py-2.5 rounded-xl text-xs font-semibold border border-white/10 bg-white/[0.03] text-zinc-300 hover:bg-white/[0.08] text-left transition-all flex items-center gap-2">
+                <span>🥂</span> Réveillon
+              </button>
+              <button type="button" data-vibe="corporativo" class="vibe-btn col-span-2 sm:col-span-2 px-3 py-2.5 rounded-xl text-xs font-semibold border border-white/10 bg-white/[0.03] text-zinc-300 hover:bg-white/[0.08] text-left transition-all flex items-center gap-2">
+                <span>🎤</span> Confraternização & Grandes Eventos
+              </button>
+            </div>
+
+            <!-- Visor dinâmico da vibe selecionada -->
+            <div id="vibe-display" class="rounded-2xl bg-[#08080c]/95 border border-pink-500/30 p-4 space-y-3 transition-all duration-500">
+              <div class="flex items-center justify-between">
+                <span id="vibe-title" class="font-display font-bold text-base text-amber-200 transition-colors duration-500">Casamento Inesquecível</span>
+                <span id="vibe-tag" class="font-mono text-[11px] px-2 py-0.5 rounded bg-pink-500/20 text-pink-300 border border-pink-500/30 transition-all duration-500">Setup Romântico + Pista</span>
+              </div>
+              <p id="vibe-desc" class="text-sm text-zinc-300 leading-relaxed">
+                Sonorização cristalina para a cerimônia, iluminação cênica aconchegante no jantar, Pista Paris iluminada e a Banda Baile completa levantando todos os convidados até o amanhecer.
+              </p>
+              <div class="pt-2 border-t border-white/10 flex flex-wrap items-center justify-between gap-2">
+                <span id="vibe-combo-hint" class="font-mono text-[11px] text-zinc-400">Sugestão: Banda + Pista Paris + Iluminação Cênica</span>
+                <button type="button" id="apply-vibe-btn" class="text-xs font-semibold text-stage-gold hover:underline flex items-center gap-1">
+                  <span>Carregar sugestão no orçamento</span>
+                  <i data-lucide="arrow-down-right" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. RIDER INTERATIVO / MONTE SEU EVENTO (SIMULADOR DE ORÇAMENTO) -->
+  <section id="simulador" class="py-16 sm:py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Cabeçalho da Seção -->
+      <div class="max-w-3xl mb-10 sm:mb-14">
+        <div class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-stage-pink mb-3">
+          <i data-lucide="check-square" class="w-4 h-4"></i>
+          <span>Rider Técnico & Locação Sob Medida</span>
+        </div>
+        <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight">
+          Monte a estrutura do seu evento
+        </h2>
+        <p class="mt-3 text-zinc-300 text-base sm:text-lg">
+          Cada festa tem um tamanho e um sonho. Selecione abaixo os shows, equipamentos de som, luz ou estruturas que você precisa. Nossa equipe monta o orçamento personalizado e envia direto pelo WhatsApp da <strong class="text-white">Rosa</strong>.
+        </p>
+      </div>
+
+      <!-- Layout Principal: Catálogo Interativo (Esquerda) + Resumo / Console de Envio (Direita) -->
+      <div class="grid lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- COLUNA ESQUERDA: CATÁLOGO DE ITENS SELECIONÁVEIS -->
+        <div class="lg:col-span-7 xl:col-span-8 space-y-10">
+
+          <!-- Categoria 1: Atrações Musicais -->
+          <div>
+            <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-5">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-stage-blue/20 border border-stage-blue/40 text-blue-400 flex items-center justify-center font-mono font-bold text-sm">01</span>
+                <div>
+                  <h3 class="font-display font-bold text-xl text-white">Atrações Musicais</h3>
+                  <p class="text-xs text-zinc-400">Do show completo com banda baile até formato intimista ou DJ</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-3.5" id="cat-musica">
+              <!-- Item -->
+              <button type="button" data-id="banda-completa" data-cat="Atrações Musicais" data-name="Banda Baile Completa (Repertório Personalizado)" class="rider-item group text-left p-4 rounded-2xl bg-[#101017] border border-[#1f1f2e] hover:border-stage-blue/60 relative">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="p-2.5 rounded-xl bg-stage-blue/15 text-blue-400">
+                    <i data-lucide="music" class="w-5 h-5"></i>
+                  </div>
+                  <div class="check-indicator w-6 h-6 rounded-lg border border-white/20 flex items-center justify-center text-transparent group-hover:border-white/40 transition-colors">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </div>
+                </div>
+                <h4 class="font-bold text-white text-base mt-3.5">Banda Baile Completa</h4>
+                <p class="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Formação completa para grandes festas, casamentos, 15 anos e carnaval. <span class="text-stage-gold">Você escolhe o repertório!</span>
+                </p>
+              </button>
+
+              <!-- Item -->
+              <button type="button" data-id="banda-reduzida" data-cat="Atrações Musicais" data-name="Banda Formato Reduzido" class="rider-item group text-left p-4 rounded-2xl bg-[#101017] border border-[#1f1f2e] hover:border-stage-blue/60 relative">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="p-2.5 rounded-xl bg-stage-blue/15 text-blue-400">
+                    <i data-lucide="mic-2" class="w-5 h-5"></i>
+                  </div>
+                  <div class="check-indicator w-6 h-6 rounded-lg border border-white/20 flex items-center justify-center text-transparent group-hover:border-white/40 transition-colors">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </div>
+                </div>
+                <h4 class="font-bold text-white text-base mt-3.5">Banda Formato Reduzido</h4>
+                <p class="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Ideal para recepções, aniversários, confraternizações e espaços menores com a mesma qualidade musical.
+                </p>
+              </button>
+
+              <!-- Item -->
+              <button type="button" data-id="dj-profissional" data-cat="Atrações Musicais" data-name="Serviço de DJ Profissional" class="rider-item group text-left p-4 rounded-2xl bg-[#101017] border border-[#1f1f2e] hover:border-stage-blue/60 relative sm:col-span-2">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-xl bg-stage-blue/15 text-blue-400 shrink-0">
+                      <i data-lucide="disc-3" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-white text-base">Serviço de DJ Profissional</h4>
+                      <p class="text-xs text-zinc-400 mt-0.5 leading-relaxed">
+                        Para comandar a pista antes, nos intervalos ou durante toda a festa com setlist sob medida.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="check-indicator w-6 h-6 rounded-lg border border-white/20 flex items-center justify-center text-transparent group-hover:border-white/40 transition-colors shrink-0">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+          <!-- Categoria 2: Som, Iluminação & Painéis de LED -->
+          <div>
+            <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-5">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-stage-purple/20 border border-stage-purple/40 text-purple-400 flex items-center justify-center font-mono font-bold text-sm">02</span>
+                <div>
+                  <h3 class="font-display font-bold text-xl text-white">Som, Luz & Painéis de LED</h3>
+                  <p class="text-xs text-zinc-400">Engenharia de áudio, iluminação cênica e impacto visual</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-3 gap-3.5">
+              <!-- Item -->
+              <button type="button" data-id="sonorizacao" data-cat="Som, Luz & LED" data-name="Sonorização Profissional" class="rider-item group text-left p-4 rounded-2xl bg-[#101017] border border-[#1f1f2e] hover:border-stage-purple/60 relative">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="p-2.5 rounded-xl bg-stage-purple/15 text-purple-400">
+                    <i data-lucide="volume-2" class="w-5 h-5"></i>
+                  </div>
+                  <div class="check-indicator w-6 h-6 rounded-lg border border-white/20 flex items-center justify-center text-transparent group-hover:border-white/40 transition-colors">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </div>
+                </div>
+                <h4 class="font-bold text-white text-base mt-3.5">Sonorização Completa</h4>
+                <p class="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Sistemas de PA, retorno, microfones sem fio e operação técnica dimensionada para o seu ambiente.
+                </p>
+              </button>
+
+              <!-- Item -->
+              <button type="button" data-id="iluminacao" data-cat="Som, Luz & LED" data-name="Iluminação Cênica & Moving Heads" class="rider-item group text-left p-4 rounded-2xl bg-[#101017] border border-[#1f1f2e] hover:border-stage-purple/60 relative">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="p-2.5 rounded-xl bg-stage-purple/15 text-purple-400">
+                    <i data-lucide="sun" class="w-5 h-5"></i>
+                  </div>
+                  <div class="check-indicator w-6 h-6 rounded-lg border border-white/20 flex items-center justify-center text-transparent group-hover:border-white/40 transition-colors">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </div>
+                </div>
+                <h4 class="font-bold text-white text-base mt-3.5">Iluminação Profissional</h4>
+                <p class="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Moving heads, refletores LED, iluminação decorativa/cênica e programação DMX sincronizada.
+                </p>
+              </button>
+
+              <!-- Item -->
+              <button type="button" data-id="led-teloes" data-cat="Som, Luz & LED" data-name="Telões e Totens de LED" class="rider-item group text-left p-4 rounded-2xl bg-[#101017] border border-[#1f1f2e] hover:border-stage-purple/60 relative">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="p-2.5 rounded-xl bg-stage-purple/15 text-purple-400">
+                    <i data-lucide="tv" class="w-5 h-5"></i>
+                  </div>
+                  <div class="check-indicator w-6 h-6 rounded-lg border border-white/20 flex items-center justify-center text-transparent group-hover:border-white/40 transition-colors">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </div>
+                </div>
+                <h4 class="font-bold text-white text-base mt-3.5">Telões & Totens de LED</h4>
+                <p class="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Painéis de alta definição para retrospectivas, clipes, transmissão ao vivo e cenografia de palco.
+                </p>
+              </button>
+            </div>
+          </div>
+
+          <!-- Categoria 3: Estrutura, Pista & Efeitos Especiais -->
+          <div>
+            <div class="flex items-center justify-between border-b border-white/10 pb-3 mb-5">
+              <div class="flex items-center gap-3">
+                <span class="w-8 h-8 rounded-lg bg-stage-pink/20 border border-stage-pink/40 text-pink-400 flex items-center justify-center font-mono font-bold text-sm">03</span>
+                <div>
+                  <h3 class="font-display font-bold text-xl text-white">Estrutura, Pista & Efeitos Especiais</h3>
+                  <p class="text-xs text-zinc-400">Tudo o que transforma o espaço do evento em um espetáculo</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3.5">
+              <!-- Item -->
+              <button type="button" data-id="palco" data-cat="Estrutura & Efeitos" data-name="Palco & Estrutura (Box Truss)" class="rider-item group text-left p-4 rounded-2xl bg-[#101017] border border-[#1f1f2e] hover:border-stage-pink/60 relative">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="p-2.5 rounded-xl bg-stage-pink/15 text-pink-400">
+                    <i data-lucide="layers" class="w-5 h-5"></i>
+                  </div>
+                  <div class="check-indicator w-6 h-6 rounded-lg border border-white/20 flex items-center justify-center text-transparent group-hover:border-white/40 transition-colors">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </div>
+                </div>
+                <h4 class="font-bold text-white text-base mt-3.5">Palco Completo</h4>
+                <p class="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Montagem segura de palco, praticáveis e estruturas metálicas (Box Truss) sob medida.
+                </p>
+              </button>
+
+              <!-- Item -->
+              <button type="button" data-id="pista-paris" data-cat="Estrutura & Efeitos" data-name="Pista Paris Iluminada" class="rider-item group text-left p-4 rounded-2xl bg-[#101017] border border-[#1f1f2e] hover:border-stage-pink/60 relative">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="p-2.5 rounded-xl bg-stage-pink/15 text-pink-400">
+                    <i data-lucide="grid" class="w-5 h-5"></i>
+                  </div>
+                  <div class="check-indicator w-6 h-6 rounded-lg border border-white/20 flex items-center justify-center text-transparent group-hover:border-white/40 transition-colors">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </div>
+                </div>
+                <h4 class="font-bold text-white text-base mt-3.5">Pista Paris</h4>
+                <p class="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  O clássico destaque de casamentos, formaturas e 15 anos que valoriza fotos e coreografias.
+                </p>
+              </button>
+
+              <!-- Item -->
+              <button type="button" data-id="maquina-fumaca" data-cat="Estrutura & Efeitos" data-name="Máquina de Fumaça" class="rider-item group text-left p-4 rounded-2xl bg-[#101017] border border-[#1f1f2e] hover:border-stage-pink/60 relative">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="p-2.5 rounded-xl bg-stage-pink/15 text-pink-400">
+                    <i data-lucide="cloud" class="w-5 h-5"></i>
+                  </div>
+                  <div class="check-indicator w-6 h-6 rounded-lg border border-white/20 flex items-center justify-center text-transparent group-hover:border-white/40 transition-colors">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </div>
+                </div>
+                <h4 class="font-bold text-white text-base mt-3.5">Máquina de Fumaça</h4>
+                <p class="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Realça os feixes de luz da pista e cria atmosfera envolvente nos momentos principais.
+                </p>
+              </button>
+
+              <!-- Item -->
+              <button type="button" data-id="bazuca-fumaca" data-cat="Estrutura & Efeitos" data-name="Bazucas de Fumaça (CO2)" class="rider-item group text-left p-4 rounded-2xl bg-[#101017] border border-[#1f1f2e] hover:border-stage-pink/60 relative">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="p-2.5 rounded-xl bg-stage-pink/15 text-pink-400">
+                    <i data-lucide="zap" class="w-5 h-5"></i>
+                  </div>
+                  <div class="check-indicator w-6 h-6 rounded-lg border border-white/20 flex items-center justify-center text-transparent group-hover:border-white/40 transition-colors">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </div>
+                </div>
+                <h4 class="font-bold text-white text-base mt-3.5">Bazucas de Fumaça</h4>
+                <p class="text-xs text-zinc-400 mt-1 leading-relaxed">
+                  Efeito de impacto imediato para entrada dos noivos, debutante, virada de ano ou ápice do show.
+                </p>
+              </button>
+
+              <!-- Item -->
+              <button type="button" data-id="gerador" data-cat="Estrutura & Efeitos" data-name="Gerador de Energia Próprio" class="rider-item group text-left p-4 rounded-2xl bg-[#101017] border border-[#1f1f2e] hover:border-stage-pink/60 relative sm:col-span-2">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-xl bg-stage-pink/15 text-pink-400 shrink-0">
+                      <i data-lucide="battery-charging" class="w-5 h-5"></i>
+                    </div>
+                    <div>
+                      <h4 class="font-bold text-white text-base">Gerador de Energia</h4>
+                      <p class="text-xs text-zinc-400 mt-0.5 leading-relaxed">
+                        Segurança total contra quedas de energia em sítios, praias (Alter do Chão), chácaras ou eventos em praça pública.
+                      </p>
+                    </div>
+                  </div>
+                  <div class="check-indicator w-6 h-6 rounded-lg border border-white/20 flex items-center justify-center text-transparent group-hover:border-white/40 transition-colors shrink-0">
+                    <i data-lucide="check" class="w-4 h-4"></i>
+                  </div>
+                </div>
+              </button>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- COLUNA DIREITA: CONSOLE DE RESUMO DO ORÇAMENTO (STICKY) -->
+        <div class="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-24">
+          <div class="rounded-3xl bg-[#0e0e16] border border-white/15 p-5 sm:p-6 shadow-2xl relative overflow-hidden">
+            <!-- Borda superior gradiente -->
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-stage-blue via-stage-purple to-stage-pink"></div>
+
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <span class="font-mono text-[11px] uppercase tracking-wider text-stage-gold">Checklist de Produção</span>
+                <h3 class="font-display font-bold text-xl text-white">Seu Orçamento</h3>
+              </div>
+              <button type="button" id="clear-rider-btn" class="hidden text-xs font-mono text-zinc-400 hover:text-stage-red transition-colors">
+                Limpar tudo
+              </button>
+            </div>
+
+            <!-- Lista de Itens Selecionados -->
+            <div class="mb-5">
+              <div id="empty-rider-state" class="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-5 text-center">
+                <i data-lucide="sliders-horizontal" class="w-7 h-7 text-zinc-500 mx-auto mb-2"></i>
+                <p class="text-sm font-medium text-zinc-300">Nenhum item selecionado ainda</p>
+                <p class="text-xs text-zinc-500 mt-1">Clique nos cards ao lado para montar a estrutura do seu evento.</p>
+              </div>
+
+              <ul id="selected-items-list" class="hidden space-y-2 max-h-56 overflow-y-auto pr-1">
+                <!-- Preenchido via JS -->
+              </ul>
+            </div>
+
+            <!-- Detalhes do Evento -->
+            <div class="space-y-3.5 pt-4 border-t border-white/10">
+              <div>
+                <label for="event-type" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">Tipo de Evento</label>
+                <select id="event-type" class="w-full rounded-xl bg-[#161622] border border-white/15 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-stage-gold">
+                  <option value="Casamento">💍 Casamento</option>
+                  <option value="Festa de 15 Anos">👑 Festa de 15 Anos</option>
+                  <option value="Aniversário">🎂 Aniversário</option>
+                  <option value="Carnaval / Bloco">🎭 Carnaval / Bloco</option>
+                  <option value="Réveillon / Ano Novo">🥂 Réveillon / Ano Novo</option>
+                  <option value="Confraternização / Empresa">🤝 Confraternização / Corporativo</option>
+                  <option value="Formatura">🎓 Formatura</option>
+                  <option value="Evento Público / Prefeitura">🎪 Evento Público / Festival</option>
+                  <option value="Outro Evento">✨ Outro Tipo de Evento</option>
+                </select>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="event-city" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">Cidade / Local</label>
+                  <select id="event-city" class="w-full rounded-xl bg-[#161622] border border-white/15 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-stage-gold">
+                    <option value="Santarém">Santarém</option>
+                    <option value="Alter do Chão">Alter do Chão</option>
+                    <option value="Mojuí dos Campos">Mojuí dos Campos</option>
+                    <option value="Belterra">Belterra</option>
+                    <option value="Óbidos">Óbidos</option>
+                    <option value="Rurópolis">Rurópolis</option>
+                    <option value="Outra cidade da região">Outra cidade da região</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="event-date" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">Data Prevista</label>
+                  <input type="date" id="event-date" class="w-full rounded-xl bg-[#161622] border border-white/15 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-stage-gold [color-scheme:dark]">
+                </div>
+              </div>
+
+              <div>
+                <label for="event-notes" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">Observação (Opcional)</label>
+                <input type="text" id="event-notes" placeholder="Ex: Local aberto, ~200 convidados, estilo sertanejo/axé..." class="w-full rounded-xl bg-[#161622] border border-white/15 px-3.5 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-stage-gold">
+              </div>
+            </div>
+
+            <!-- Botão de Envio Direto para WhatsApp da Rosa -->
+            <div class="mt-6">
+              <button type="button" id="send-whatsapp-btn" class="w-full py-4 px-5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-display font-extrabold text-sm sm:text-base tracking-wide transition-all shadow-lg shadow-emerald-500/20 flex items-center justify-center gap-2.5">
+                <i data-lucide="send" class="w-5 h-5"></i>
+                <span>Enviar Pedido para Rosa</span>
+              </button>
+              <p class="text-center font-mono text-[11px] text-zinc-400 mt-2.5">
+                Atendimento direto: <span class="text-white">(93) 99199-7960</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 3. A BANDA BAILE & REPERTÓRIO SOB MEDIDA -->
+  <section id="banda" class="py-16 sm:py-24 border-t border-white/10 bg-[#0b0b12]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid lg:grid-cols-12 gap-10 items-center">
+        
+        <div class="lg:col-span-5 space-y-5">
+          <div class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-stage-gold">
+            <i data-lucide="disc" class="w-4 h-4"></i>
+            <span>Mais de 30 Anos de Estrada</span>
+          </div>
+          <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white leading-tight">
+            Uma Banda Baile de verdade: <span class="logo-text-gradient">você escolhe o repertório.</span>
+          </h2>
+          <p class="text-zinc-300 text-base leading-relaxed">
+            Não tocamos um show engessado. Com mais de três décadas animando festas em Santarém e região, a <strong class="text-white">Waltinho & Banda</strong> adapta cada bloco musical ao perfil dos seus convidados — do receptivo elegante até a pista fervendo no final da noite.
+          </p>
+
+          <!-- Comparativo Rápido das Formações -->
+          <div class="grid grid-cols-2 gap-3 pt-2">
+            <div class="p-4 rounded-2xl bg-[#12121b] border border-white/10">
+              <span class="font-mono text-[11px] text-stage-pink uppercase">Show Completo</span>
+              <h4 class="font-bold text-white text-sm mt-1">Banda Completa</h4>
+              <p class="text-xs text-zinc-400 mt-1">Metais, percussão, vocais e energia máxima de palco para grandes festas.</p>
+            </div>
+            <div class="p-4 rounded-2xl bg-[#12121b] border border-white/10">
+              <span class="font-mono text-[11px] text-blue-400 uppercase">Formato Compacto</span>
+              <h4 class="font-bold text-white text-sm mt-1">Banda Reduzida</h4>
+              <p class="text-xs text-zinc-400 mt-1">Mesma identidade musical em formação enxuta para eventos íntimos.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Setlist Interativo -->
+        <div class="lg:col-span-7">
+          <div class="rounded-3xl bg-[#101018] border border-white/15 p-6 sm:p-8 shadow-xl">
+            <div class="flex flex-wrap items-center justify-between gap-2 pb-4 mb-5 border-b border-white/10">
+              <div>
+                <span class="font-mono text-xs text-zinc-400 uppercase">Explore os Ritmos do Show</span>
+                <h3 class="font-display font-bold text-xl text-white">Toque nos estilos para ver como funciona</h3>
+              </div>
+              <span class="font-mono text-xs px-2.5 py-1 rounded-full bg-stage-gold/15 text-stage-gold border border-stage-gold/30">
+                100% Personalizável
+              </span>
+            </div>
+
+            <!-- Pills de Ritmos -->
+            <div class="flex flex-wrap gap-2 mb-6" id="genre-tabs">
+              <button type="button" data-genre="axe" class="genre-btn active px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-gradient-to-r from-stage-blue to-stage-purple text-white shadow-md transition-all">
+                🔥 Axé & Carnaval
+              </button>
+              <button type="button" data-genre="sertanejo" class="genre-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 transition-all">
+                🤠 Sertanejo & Arrocha
+              </button>
+              <button type="button" data-genre="forro" class="genre-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 transition-all">
+                🪗 Forró & Brega Marcante
+              </button>
+              <button type="button" data-genre="poprock" class="genre-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 transition-all">
+                🎸 Pop & Rock Nacional/Int.
+              </button>
+              <button type="button" data-genre="pagode" class="genre-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 transition-all">
+                🥁 Pagode & Samba
+              </button>
+              <button type="button" data-genre="flashback" class="genre-btn px-4 py-2 rounded-full text-xs sm:text-sm font-semibold bg-white/5 hover:bg-white/10 text-zinc-300 border border-white/10 transition-all">
+                🪩 Flashback & Anos 80/90
+              </button>
+            </div>
+
+            <!-- Painel de Detalhes do Ritmo -->
+            <div id="genre-panel" class="rounded-2xl bg-[#08080c] border border-white/10 p-5 sm:p-6 transition-all">
+              <div class="flex items-center justify-between gap-3 mb-2">
+                <h4 id="genre-title" class="font-display font-bold text-lg sm:text-xl text-white">Axé, Swingueira & Marchinhas de Carnaval</h4>
+                <span id="genre-moment" class="font-mono text-[11px] px-2.5 py-1 rounded bg-stage-pink/20 text-pink-300 shrink-0">Pico da Festa</span>
+              </div>
+              <p id="genre-desc" class="text-sm text-zinc-300 leading-relaxed mb-4">
+                Ninguém fica parado! Dos clássicos do axé das antigas até os hits atuais de trio elétrico, perfeito para levantar a pista em casamentos, formaturas, blocos e festas de carnaval.
+              </p>
+              <div class="flex flex-wrap items-center gap-2 text-xs font-mono text-zinc-400">
+                <span class="text-stage-gold">Combina com:</span>
+                <span id="genre-gear" class="px-2.5 py-1 rounded bg-white/5 text-zinc-200">Bazucas de Fumaça + Telão de LED + Banda Completa</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 3.5 DEPOIMENTOS DE CLIENTES E NOIVOS + MURAL INTERATIVO -->
+  <section id="depoimentos" class="py-16 sm:py-24 border-t border-white/10 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Cabeçalho da Seção -->
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
+        <div class="max-w-2xl">
+          <div class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-stage-gold mb-3">
+            <i data-lucide="star" class="w-4 h-4 fill-stage-gold text-stage-gold"></i>
+            <span>Quem já viveu a experiência WM</span>
+          </div>
+          <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight">
+            Histórias de quem fez a festa com a gente
+          </h2>
+          <p class="mt-3 text-zinc-300 text-base sm:text-lg">
+            De casamentos emocionantes em Alter do Chão a grandes carnavais e formaturas em Santarém. Veja o relato de quem contratou ou deixe sua avaliação abaixo.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-3 px-4 py-3 rounded-2xl bg-[#101018] border border-white/10 self-start lg:self-auto">
+          <div class="flex items-center gap-1 text-stage-gold">
+            <i data-lucide="star" class="w-4 h-4 fill-stage-gold"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-stage-gold"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-stage-gold"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-stage-gold"></i>
+            <i data-lucide="star" class="w-4 h-4 fill-stage-gold"></i>
+          </div>
+          <span class="font-mono text-xs text-zinc-300">
+            <strong id="reviews-count" class="text-white">3</strong> avaliações registradas
+          </span>
+        </div>
+      </div>
+
+      <!-- Grade: Mural de Avaliações (Esquerda) + Formulário "Deixe seu depoimento" (Direita) -->
+      <div class="grid lg:grid-cols-12 gap-8 items-start">
+        
+        <!-- Mural de Cards -->
+        <div class="lg:col-span-7 xl:col-span-8">
+          <div id="reviews-grid" class="grid sm:grid-cols-2 gap-4">
+            <!-- Cards renderizados via JS (iniciais + novos salvos no navegador) -->
+          </div>
+        </div>
+
+        <!-- Formulário Interativo para Deixar Comentário -->
+        <div class="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-24">
+          <form id="review-form" class="rounded-3xl bg-[#0e0e16] border border-white/15 p-5 sm:p-6 shadow-2xl relative overflow-hidden space-y-4">
+            <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-stage-red via-orange-500 to-stage-gold"></div>
+
+            <div>
+              <span class="font-mono text-[11px] uppercase tracking-wider text-stage-pink">Mural Aberto</span>
+              <h3 class="font-display font-bold text-xl text-white">Deixe seu depoimento</h3>
+              <p class="text-xs text-zinc-400 mt-1">Já contratou a banda ou nossas estruturas? Conte como foi seu evento!</p>
+            </div>
+
+            <!-- Seletor de Estrelas Interativo -->
+            <div>
+              <span class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">Sua Avaliação</span>
+              <div class="flex items-center gap-1.5" id="star-rating-picker" role="radiogroup" aria-label="Nota de 1 a 5 estrelas">
+                <button type="button" data-star="1" aria-label="1 estrela" class="star-pick-btn p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-stage-gold transition-transform hover:scale-110">
+                  <i data-lucide="star" class="w-5 h-5 fill-stage-gold"></i>
+                </button>
+                <button type="button" data-star="2" aria-label="2 estrelas" class="star-pick-btn p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-stage-gold transition-transform hover:scale-110">
+                  <i data-lucide="star" class="w-5 h-5 fill-stage-gold"></i>
+                </button>
+                <button type="button" data-star="3" aria-label="3 estrelas" class="star-pick-btn p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-stage-gold transition-transform hover:scale-110">
+                  <i data-lucide="star" class="w-5 h-5 fill-stage-gold"></i>
+                </button>
+                <button type="button" data-star="4" aria-label="4 estrelas" class="star-pick-btn p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-stage-gold transition-transform hover:scale-110">
+                  <i data-lucide="star" class="w-5 h-5 fill-stage-gold"></i>
+                </button>
+                <button type="button" data-star="5" aria-label="5 estrelas" class="star-pick-btn p-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-stage-gold transition-transform hover:scale-110">
+                  <i data-lucide="star" class="w-5 h-5 fill-stage-gold"></i>
+                </button>
+                <span id="star-rating-label" class="ml-2 font-mono text-xs text-stage-gold">5.0 / Excelente</span>
+              </div>
+            </div>
+
+            <div>
+              <label for="rev-name" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">Seu Nome (ou Casal / Empresa)</label>
+              <input type="text" id="rev-name" required maxlength="60" placeholder="Ex: Camila & Rodrigo" class="w-full rounded-xl bg-[#161622] border border-white/15 px-3.5 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-stage-gold">
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label for="rev-event" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">Tipo de Evento</label>
+                <select id="rev-event" class="w-full rounded-xl bg-[#161622] border border-white/15 px-3 py-2.5 text-sm text-white focus:outline-none focus:border-stage-gold">
+                  <option value="Casamento">Casamento</option>
+                  <option value="15 Anos">15 Anos</option>
+                  <option value="Aniversário">Aniversário</option>
+                  <option value="Carnaval">Carnaval</option>
+                  <option value="Confraternização">Confraternização</option>
+                  <option value="Outro">Outro</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="rev-city" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">Cidade</label>
+                <input type="text" id="rev-city" required maxlength="40" placeholder="Ex: Santarém" class="w-full rounded-xl bg-[#161622] border border-white/15 px-3.5 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-stage-gold">
+              </div>
+            </div>
+
+            <div>
+              <label for="rev-message" class="block font-mono text-[11px] uppercase tracking-wider text-zinc-400 mb-1.5">Seu Comentário</label>
+              <textarea id="rev-message" required rows="3" maxlength="320" placeholder="Conte o que mais gostou na banda, som, iluminação ou estrutura..." class="w-full rounded-xl bg-[#161622] border border-white/15 px-3.5 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-stage-gold resize-none"></textarea>
+            </div>
+
+            <button type="submit" class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-stage-blue via-stage-purple to-stage-pink hover:brightness-110 text-white font-display font-bold text-sm tracking-wide transition-all shadow-lg shadow-stage-purple/25 flex items-center justify-center gap-2">
+              <i data-lucide="message-square-plus" class="w-4 h-4"></i>
+              <span>Publicar Depoimento no Mural</span>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ÁREA DE ATUAÇÃO (SANTARÉM E REGIÃO) -->
+  <section id="regiao" class="py-16 sm:py-24 border-t border-white/10 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="rounded-3xl bg-gradient-to-br from-[#12121d] via-[#0e0e16] to-[#161020] border border-white/15 p-6 sm:p-10 lg:p-12 relative overflow-hidden">
+        
+        <div class="grid lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-7 space-y-4">
+            <div class="inline-flex items-center gap-2 font-mono text-xs uppercase tracking-widest text-blue-400">
+              <i data-lucide="map-pin" class="w-4 h-4"></i>
+              <span>Atuação no Oeste do Pará</span>
+            </div>
+            <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white">
+              Base em Santarém, na estrada por toda a região.
+            </h2>
+            <p class="text-zinc-300 text-base leading-relaxed">
+              Contamos com equipe técnica experiente, logística completa para viagens e <strong class="text-white">gerador de energia</strong> para levar toda a estrutura de som, palco, LED e a Waltinho & Banda com pontualidade e segurança para qualquer localidade.
+            </p>
+
+            <!-- Tags de Cidades -->
+            <div class="pt-3 flex flex-wrap gap-2.5">
+              <span class="px-3.5 py-2 rounded-xl bg-stage-blue/20 border border-stage-blue/40 text-white text-xs sm:text-sm font-semibold flex items-center gap-1.5">
+                <i data-lucide="navigation" class="w-3.5 h-3.5 text-stage-gold"></i> Santarém (Sede)
+              </span>
+              <span class="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-zinc-200 text-xs sm:text-sm font-medium">
+                🏖️ Alter do Chão
+              </span>
+              <span class="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-zinc-200 text-xs sm:text-sm font-medium">
+                📍 Óbidos
+              </span>
+              <span class="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-zinc-200 text-xs sm:text-sm font-medium">
+                📍 Rurópolis
+              </span>
+              <span class="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-zinc-200 text-xs sm:text-sm font-medium">
+                📍 Mojuí dos Campos
+              </span>
+              <span class="px-3.5 py-2 rounded-xl bg-white/5 border border-white/10 text-zinc-200 text-xs sm:text-sm font-medium">
+                📍 Belterra & Região
+              </span>
+            </div>
+          </div>
+
+          <!-- Card de Garantia Técnica -->
+          <div class="lg:col-span-5">
+            <div class="rounded-2xl bg-[#08080c]/90 border border-white/10 p-6 space-y-4">
+              <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-stage-gold/15 border border-stage-gold/30 flex items-center justify-center text-stage-gold shrink-0">
+                  <i data-lucide="shield-check" class="w-6 h-6"></i>
+                </div>
+                <div>
+                  <h3 class="font-display font-bold text-lg text-white">Tranquilidade para o Contratante</h3>
+                  <p class="text-xs text-zinc-400">Mais de 3 décadas de tradição e compromisso</p>
+                </div>
+              </div>
+              <ul class="space-y-2.5 text-sm text-zinc-300">
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
+                  <span>Montagem antecipada e passagem de som antes dos convidados chegarem.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
+                  <span>Opção de gerador próprio para festas em praias, sítios e áreas abertas.</span>
+                </li>
+                <li class="flex items-start gap-2.5">
+                  <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 mt-0.5 shrink-0"></i>
+                  <span>Locação avulsa de equipamentos (som, luz, palco, LED, pista) ou pacote completo com a banda.</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. RODAPÉ & CONTATO DIRETO -->
+  <footer id="contato" class="border-t border-white/10 bg-[#060609] pt-14 pb-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-12 gap-8 pb-12 border-b border-white/10 items-center">
+        
+        <div class="md:col-span-6 space-y-3">
+          <div class="flex items-center gap-3.5">
+            <div class="w-14 h-14 rounded-full p-[1.5px] bg-gradient-to-tr from-stage-blue via-stage-purple to-stage-pink shadow-lg shadow-stage-purple/30 shrink-0 overflow-hidden">
+              <svg viewBox="0 0 120 120" class="w-full h-full rounded-full" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo Waltinho Mattos Produções">
+                <defs>
+                  <radialGradient id="logoBgFoot" cx="50%" cy="50%" r="70%">
+                    <stop offset="35%" stop-color="#0b0814"/>
+                    <stop offset="100%" stop-color="#1a0b2e"/>
+                  </radialGradient>
+                  <radialGradient id="glowBlueFoot" cx="15%" cy="15%" r="55%">
+                    <stop offset="0%" stop-color="#0284c7" stop-opacity="0.85"/>
+                    <stop offset="100%" stop-color="#0284c7" stop-opacity="0"/>
+                  </radialGradient>
+                  <radialGradient id="glowPinkFoot" cx="85%" cy="20%" r="55%">
+                    <stop offset="0%" stop-color="#e11d48" stop-opacity="0.85"/>
+                    <stop offset="100%" stop-color="#e11d48" stop-opacity="0"/>
+                  </radialGradient>
+                  <radialGradient id="glowPurpleFoot" cx="50%" cy="90%" r="60%">
+                    <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.85"/>
+                    <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+                  </radialGradient>
+                  <linearGradient id="textGradFoot" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="10%" stop-color="#ef4444"/>
+                    <stop offset="55%" stop-color="#f97316"/>
+                    <stop offset="95%" stop-color="#facc15"/>
+                  </linearGradient>
+                </defs>
+                <rect width="120" height="120" fill="url(#logoBgFoot)"/>
+                <rect width="120" height="120" fill="url(#glowBlueFoot)"/>
+                <rect width="120" height="120" fill="url(#glowPinkFoot)"/>
+                <rect width="120" height="120" fill="url(#glowPurpleFoot)"/>
+                <text x="60" y="57" text-anchor="middle" font-family="'Kaushan Script', cursive" font-size="17.5" fill="url(#textGradFoot)" stroke="#27272a" stroke-width="0.6" paint-order="stroke">Waltinho Mattos</text>
+                <text x="60" y="75" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-weight="700" font-size="11.5" fill="#ffffff" letter-spacing="0.3">Produções</text>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-logo text-2xl sm:text-3xl logo-text-gradient pr-2">Waltinho Mattos</h3>
+              <p class="font-sans font-bold text-sm text-white">Produções <span class="font-mono font-normal text-xs text-zinc-400">• Waltinho & Banda • Santarém/PA</span></p>
+            </div>
+          </div>
+          <p class="text-sm text-zinc-300 max-w-md pt-1">
+            🔥 <strong class="text-white">Presença obrigatória nos melhores eventos!</strong><br>
+            Banda baile, sonorização, iluminação, palco, totens e telões de LED, Pista Paris, efeitos especiais e muito mais.
+          </p>
+        </div>
+
+        <div class="md:col-span-6 flex flex-col sm:flex-row md:justify-end gap-3.5">
+          <!-- Card Contato Rosa -->
+          <div class="p-4 rounded-2xl bg-[#101018] border border-white/10 flex flex-col justify-between gap-3">
+            <div>
+              <span class="font-mono text-[11px] uppercase text-stage-gold">Orçamentos & Datas (Rosa)</span>
+              <div class="flex items-center gap-2 mt-1">
+                <span class="font-display font-bold text-lg text-white">(93) 99199-7960</span>
+                <button type="button" id="copy-phone-btn" title="Copiar número" class="p-1.5 rounded-lg bg-white/5 hover:bg-white/15 text-zinc-300 hover:text-white transition-colors">
+                  <i data-lucide="copy" class="w-4 h-4"></i>
+                </button>
+              </div>
+            </div>
+            <a href="https://wa.me/5593991997960?text=Ol%C3%A1%20Rosa!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20com%20a%20Waltinho%20%26%20Banda%20/%20WM%20Produ%C3%A7%C3%B5es." target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-bold text-xs transition-colors">
+              <i data-lucide="message-circle" class="w-4 h-4"></i>
+              <span>Chamar no WhatsApp</span>
+            </a>
+          </div>
+
+          <!-- Card Instagram -->
+          <div class="p-4 rounded-2xl bg-[#101018] border border-white/10 flex flex-col justify-between gap-3">
+            <div>
+              <span class="font-mono text-[11px] uppercase text-stage-pink">Acompanhe os Shows</span>
+              <p class="font-display font-bold text-lg text-white mt-1">@waltinhoebanda</p>
+            </div>
+            <a href="https://instagram.com/waltinhoebanda" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-gradient-to-r from-stage-purple to-stage-pink hover:brightness-110 text-white font-bold text-xs transition-all">
+              <i data-lucide="instagram" class="w-4 h-4"></i>
+              <span>Ver no Instagram</span>
+            </a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-zinc-500 font-mono">
+        <p>© <span id="current-year"></span> Waltinho & Banda / WM Produções. Todos os direitos reservados.</p>
+        <p>Santarém • Pará • Brasil</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- BOTÃO FLUTUANTE INTELIGENTE (ACOMPANHA O RIDER EM TEMPO REAL) -->
+  <div id="smart-floating-bar" class="fixed bottom-4 right-4 left-4 sm:left-auto sm:bottom-6 sm:right-6 z-40 transition-all duration-300">
+    <div id="smart-floating-card" class="rounded-2xl bg-[#11111a]/95 border border-white/20 shadow-2xl shadow-black/70 backdrop-blur-xl p-2 pl-4 flex items-center justify-between sm:justify-start gap-3">
+      
+      <!-- Status Dinâmico (Clica para rolar até o simulador) -->
+      <button type="button" id="floating-scroll-btn" class="flex items-center gap-3 text-left group focus:outline-none">
+        <div class="relative flex items-center justify-center w-9 h-9 rounded-xl bg-gradient-to-tr from-stage-blue via-stage-purple to-stage-pink text-white shrink-0">
+          <i data-lucide="sliders" class="w-4 h-4"></i>
+          <span id="floating-count-dot" class="hidden absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-stage-gold text-zinc-950 font-mono font-bold text-[11px] flex items-center justify-center shadow">
+            0
+          </span>
+        </div>
+        <div class="pr-1">
+          <span id="floating-status-title" class="block text-xs sm:text-sm font-bold text-white group-hover:text-stage-gold transition-colors leading-tight">
+            0 itens no rider
+          </span>
+          <span id="floating-status-sub" class="block font-mono text-[10px] sm:text-[11px] text-zinc-400 leading-tight mt-0.5">
+            Toque para montar seu evento
+          </span>
+        </div>
+      </button>
+
+      <!-- Ação Principal Contextual -->
+      <button type="button" id="floating-action-btn" class="px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-display font-bold text-xs tracking-wide transition-all flex items-center gap-1.5 shrink-0">
+        <span id="floating-action-text">Montar</span>
+        <i id="floating-action-icon" data-lucide="arrow-up-right" class="w-4 h-4"></i>
+      </button>
+
+    </div>
+  </div>
+
+  <script>
+    // Inicializar ícones Lucide
+    lucide.createIcons();
+
+    // Ano atual no rodapé
+    document.getElementById('current-year').textContent = new Date().getFullYear();
+
+    // Função de notificação Toast
+    let toastTimeout;
+    function showToast(message) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toast-msg');
+      toastMsg.textContent = message;
+      toast.classList.remove('translate-x-full', 'opacity-0');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('translate-x-full', 'opacity-0');
+      }, 3200);
+    }
+
+    // ---------------------------------------------------------
+    // 1. SIMULADOR DE CLIMA DE PALCO (HERO - ILUMINAÇÃO INTENSA)
+    // ---------------------------------------------------------
+    const vibesData = {
+      casamento: {
+        scene: 'CENA 01 • ROMÂNTICO',
+        title: 'Casamento Inesquecível',
+        tag: 'Setup Romântico + Pista',
+        desc: 'Sonorização cristalina para a cerimônia, iluminação cênica aconchegante no jantar, Pista Paris iluminada e a Banda Baile completa levantando todos os convidados até o amanhecer.',
+        hint: 'Sugestão: Banda Completa + Pista Paris + Iluminação',
+        eventSelect: 'Casamento',
+        suggestedIds: ['banda-completa', 'sonorizacao', 'iluminacao', 'pista-paris'],
+        colors: ['rgba(244, 114, 182, 0.45)', 'rgba(251, 113, 133, 0.38)', 'rgba(253, 224, 71, 0.35)'],
+        dots: ['#f472b6', '#fda4af', '#fde047'],
+        strip: 'linear-gradient(90deg, #f472b6, #fda4af, #fde047)',
+        border: 'rgba(244, 114, 182, 0.55)',
+        glow: '0 0 40px -10px rgba(244, 114, 182, 0.45)',
+        titleColor: '#fde68a'
+      },
+      '15anos': {
+        scene: 'CENA 02 • NEON BALADA',
+        title: 'Festa de 15 Anos & Balada',
+        tag: 'Impacto Visual & LED',
+        desc: 'Entrada triunfal com Bazucas de Fumaça, Telões e Totens de LED para retrospectiva, Pista Paris e repertório jovem com DJ + Banda ao vivo.',
+        hint: 'Sugestão: Banda + DJ + Telões LED + Pista Paris + Bazucas',
+        eventSelect: 'Festa de 15 Anos',
+        suggestedIds: ['banda-completa', 'dj-profissional', 'led-teloes', 'pista-paris', 'bazuca-fumaca'],
+        colors: ['rgba(236, 72, 153, 0.55)', 'rgba(168, 85, 247, 0.5)', 'rgba(6, 182, 212, 0.45)'],
+        dots: ['#ec4899', '#a855f7', '#22d3ee'],
+        strip: 'linear-gradient(90deg, #ec4899, #a855f7, #22d3ee)',
+        border: 'rgba(217, 70, 239, 0.65)',
+        glow: '0 0 45px -8px rgba(217, 70, 239, 0.55)',
+        titleColor: '#f0abfc'
+      },
+      carnaval: {
+        scene: 'CENA 03 • TRIO ELÉTRICO',
+        title: 'Carnaval, Blocos & Trio',
+        tag: 'Pressão Sonora Máxima',
+        desc: 'Palco completo, sonorização de alta potência, painel de LED, gerador próprio e a Waltinho & Banda tocando os maiores sucessos de axé, marchinhas e swingueira.',
+        hint: 'Sugestão: Banda Completa + Palco + Som + Gerador',
+        eventSelect: 'Carnaval / Bloco',
+        suggestedIds: ['banda-completa', 'sonorizacao', 'palco', 'gerador'],
+        colors: ['rgba(239, 68, 68, 0.55)', 'rgba(249, 115, 22, 0.5)', 'rgba(250, 204, 21, 0.48)'],
+        dots: ['#ef4444', '#f97316', '#facc15'],
+        strip: 'linear-gradient(90deg, #ef4444, #f97316, #facc15)',
+        border: 'rgba(249, 115, 22, 0.65)',
+        glow: '0 0 45px -8px rgba(239, 68, 68, 0.55)',
+        titleColor: '#facc15'
+      },
+      reveillon: {
+        scene: 'CENA 04 • VIRADA OURO',
+        title: 'Réveillon & Virada de Ano',
+        tag: 'Contagem Regressiva no LED',
+        desc: 'Telão de LED sincronizado com a virada, bazucas de fumaça na meia-noite, gerador de energia garantido e show eclético para celebrar o ano novo.',
+        hint: 'Sugestão: Banda + Telões LED + Bazucas + Gerador',
+        eventSelect: 'Réveillon / Ano Novo',
+        suggestedIds: ['banda-completa', 'led-teloes', 'bazuca-fumaca', 'gerador', 'iluminacao'],
+        colors: ['rgba(250, 204, 21, 0.5)', 'rgba(255, 255, 255, 0.25)', 'rgba(245, 158, 11, 0.48)'],
+        dots: ['#facc15', '#ffffff', '#f59e0b'],
+        strip: 'linear-gradient(90deg, #facc15, #ffffff, #f59e0b)',
+        border: 'rgba(250, 204, 21, 0.65)',
+        glow: '0 0 45px -8px rgba(250, 204, 21, 0.5)',
+        titleColor: '#fef08a'
+      },
+      corporativo: {
+        scene: 'CENA 05 • PALCO AZUL',
+        title: 'Confraternização & Eventos',
+        tag: 'Versatilidade Total',
+        desc: 'Desde som e microfones para palestras e premiações até o show de confraternização com banda completa ou reduzida para integrar toda a equipe.',
+        hint: 'Sugestão: Banda Reduzida + Sonorização + Iluminação',
+        eventSelect: 'Confraternização / Empresa',
+        suggestedIds: ['banda-reduzida', 'sonorizacao', 'iluminacao'],
+        colors: ['rgba(37, 99, 235, 0.55)', 'rgba(14, 165, 233, 0.48)', 'rgba(99, 102, 241, 0.48)'],
+        dots: ['#3b82f6', '#38bdf8', '#818cf8'],
+        strip: 'linear-gradient(90deg, #2563eb, #0ea5e9, #6366f1)',
+        border: 'rgba(56, 189, 248, 0.65)',
+        glow: '0 0 45px -8px rgba(37, 99, 235, 0.55)',
+        titleColor: '#7dd3fc'
+      }
+    };
+
+    let currentVibeKey = 'casamento';
+    const vibeBtns = document.querySelectorAll('.vibe-btn');
+    const beamLeft = document.getElementById('beam-left');
+    const beamCenter = document.getElementById('beam-center');
+    const beamRight = document.getElementById('beam-right');
+    const dmxConsoleCard = document.getElementById('dmx-console-card');
+    const dmxTopStrip = document.getElementById('dmx-top-strip');
+    const dmxChannelBadge = document.getElementById('dmx-channel-badge');
+    const vibeDisplay = document.getElementById('vibe-display');
+
+    vibeBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.vibe;
+        currentVibeKey = key;
+        const data = vibesData[key];
+
+        vibeBtns.forEach(b => {
+          b.classList.remove('active', 'bg-white/10', 'border-stage-gold', 'text-white');
+          b.classList.add('border-white/10', 'bg-white/[0.03]', 'text-zinc-300');
+        });
+        btn.classList.add('active', 'bg-white/10', 'border-stage-gold', 'text-white');
+        btn.classList.remove('border-white/10', 'bg-white/[0.03]', 'text-zinc-300');
+
+        const titleEl = document.getElementById('vibe-title');
+        titleEl.textContent = data.title;
+        titleEl.style.color = data.titleColor;
+        document.getElementById('vibe-tag').textContent = data.tag;
+        document.getElementById('vibe-desc').textContent = data.desc;
+        document.getElementById('vibe-combo-hint').textContent = data.hint;
+        dmxChannelBadge.textContent = data.scene;
+
+        // Iluminação ambiente do palco
+        beamLeft.style.backgroundColor = data.colors[0];
+        beamCenter.style.backgroundColor = data.colors[1];
+        beamRight.style.backgroundColor = data.colors[2];
+
+        // Iluminação física da Mesa DMX
+        dmxTopStrip.style.background = data.strip;
+        dmxTopStrip.style.boxShadow = data.glow;
+        dmxConsoleCard.style.borderColor = data.border;
+        dmxConsoleCard.style.boxShadow = data.glow;
+        vibeDisplay.style.borderColor = data.border;
+
+        [1, 2, 3].forEach((num, idx) => {
+          const dot = document.getElementById(`dmx-dot-${num}`);
+          dot.style.backgroundColor = data.dots[idx];
+          dot.style.boxShadow = `0 0 12px ${data.dots[idx]}`;
+        });
+      });
+    });
+
+    // ---------------------------------------------------------
+    // 2. RIDER INTERATIVO / SIMULADOR DE ORÇAMENTO
+    // ---------------------------------------------------------
+    const selectedItems = new Map();
+    const riderCards = document.querySelectorAll('.rider-item');
+    const emptyState = document.getElementById('empty-rider-state');
+    const selectedListEl = document.getElementById('selected-items-list');
+    const clearBtn = document.getElementById('clear-rider-btn');
+    const navBadge = document.getElementById('nav-badge');
+
+    // Elementos do Botão Flutuante Inteligente
+    const floatingCard = document.getElementById('smart-floating-card');
+    const floatingCountDot = document.getElementById('floating-count-dot');
+    const floatingStatusTitle = document.getElementById('floating-status-title');
+    const floatingStatusSub = document.getElementById('floating-status-sub');
+    const floatingActionBtn = document.getElementById('floating-action-btn');
+
+    function triggerFloatingPulse() {
+      floatingCard.classList.remove('float-pop');
+      void floatingCard.offsetWidth;
+      floatingCard.classList.add('float-pop');
+    }
+
+    function updateRiderUI() {
+      const count = selectedItems.size;
+
+      // Atualiza badge na barra superior e Botão Flutuante Inteligente
+      if (count > 0) {
+        navBadge.textContent = count;
+        navBadge.classList.remove('hidden');
+        emptyState.classList.add('hidden');
+        selectedListEl.classList.remove('hidden');
+        clearBtn.classList.remove('hidden');
+
+        floatingCountDot.textContent = count;
+        floatingCountDot.classList.remove('hidden');
+        floatingCard.classList.remove('border-white/20');
+        floatingCard.classList.add('border-stage-gold/60');
+
+        const labelItens = count === 1 ? '1 item selecionado' : `${count} itens selecionados`;
+        floatingStatusTitle.textContent = `${labelItens} — Finalizar com Rosa`;
+        floatingStatusSub.textContent = 'Clique para revisar ou enviar no WhatsApp';
+
+        floatingActionBtn.className = 'px-3.5 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-display font-extrabold text-xs tracking-wide transition-all flex items-center gap-1.5 shrink-0 shadow-lg shadow-emerald-500/20';
+        floatingActionBtn.innerHTML = `<span>WhatsApp</span><i data-lucide="send" class="w-3.5 h-3.5"></i>`;
+      } else {
+        navBadge.classList.add('hidden');
+        emptyState.classList.remove('hidden');
+        selectedListEl.classList.add('hidden');
+        clearBtn.classList.add('hidden');
+
+        floatingCountDot.classList.add('hidden');
+        floatingCard.classList.add('border-white/20');
+        floatingCard.classList.remove('border-stage-gold/60');
+
+        floatingStatusTitle.textContent = '0 itens no rider';
+        floatingStatusSub.textContent = 'Monte som, luz, palco e banda';
+
+        floatingActionBtn.className = 'px-3.5 py-2.5 rounded-xl bg-white/10 hover:bg-white/15 text-white font-display font-bold text-xs tracking-wide transition-all flex items-center gap-1.5 shrink-0';
+        floatingActionBtn.innerHTML = `<span>Montar</span><i data-lucide="arrow-up-right" class="w-4 h-4"></i>`;
+      }
+
+      // Atualiza estado visual dos cards no catálogo
+      riderCards.forEach(card => {
+        const id = card.dataset.id;
+        const indicator = card.querySelector('.check-indicator');
+        if (selectedItems.has(id)) {
+          card.classList.add('selected');
+          indicator.classList.remove('border-white/20', 'text-transparent');
+          indicator.classList.add('bg-stage-gold', 'border-stage-gold', 'text-black');
+        } else {
+          card.classList.remove('selected');
+          indicator.classList.add('border-white/20', 'text-transparent');
+          indicator.classList.remove('bg-stage-gold', 'border-stage-gold', 'text-black');
+        }
+      });
+
+      // Renderiza lista lateral
+      selectedListEl.innerHTML = '';
+      selectedItems.forEach((item, id) => {
+        const li = document.createElement('li');
+        li.className = 'flex items-center justify-between gap-2 px-3 py-2 rounded-xl bg-white/[0.04] border border-white/10 text-xs';
+        li.innerHTML = `
+          <div class="truncate">
+            <span class="block font-mono text-[10px] text-stage-gold">${item.cat}</span>
+            <span class="font-medium text-white">${item.name}</span>
+          </div>
+          <button type="button" data-remove="${id}" aria-label="Remover item" class="p-1 text-zinc-400 hover:text-stage-red transition-colors shrink-0">
+            <i data-lucide="x" class="w-4 h-4"></i>
+          </button>
+        `;
+        selectedListEl.appendChild(li);
+      });
+
+      lucide.createIcons();
+
+      // Eventos de remoção individual
+      selectedListEl.querySelectorAll('[data-remove]').forEach(btn => {
+        btn.addEventListener('click', () => {
+          selectedItems.delete(btn.dataset.remove);
+          updateRiderUI();
+          triggerFloatingPulse();
+        });
+      });
+    }
+
+    riderCards.forEach(card => {
+      card.addEventListener('click', () => {
+        const id = card.dataset.id;
+        if (selectedItems.has(id)) {
+          selectedItems.delete(id);
+        } else {
+          selectedItems.set(id, {
+            cat: card.dataset.cat,
+            name: card.dataset.name
+          });
+        }
+        updateRiderUI();
+        triggerFloatingPulse();
+      });
+    });
+
+    clearBtn.addEventListener('click', () => {
+      selectedItems.clear();
+      updateRiderUI();
+      triggerFloatingPulse();
+      showToast('Lista de itens limpa.');
+    });
+
+    // Carregar sugestão da vibe do Hero direto no Rider
+    document.getElementById('apply-vibe-btn').addEventListener('click', () => {
+      const data = vibesData[currentVibeKey];
+      selectedItems.clear();
+      data.suggestedIds.forEach(id => {
+        const card = document.querySelector(`.rider-item[data-id="${id}"]`);
+        if (card) {
+          selectedItems.set(id, {
+            cat: card.dataset.cat,
+            name: card.dataset.name
+          });
+        }
+      });
+      document.getElementById('event-type').value = data.eventSelect;
+      updateRiderUI();
+      triggerFloatingPulse();
+      document.getElementById('simulador').scrollIntoView({ behavior: 'smooth' });
+      showToast(`Sugestão "${data.title}" carregada no seu orçamento!`);
+    });
+
+    // Função centralizada de envio para o WhatsApp da Rosa
+    function sendOrderToRosaWhatsApp() {
+      const eventType = document.getElementById('event-type').value;
+      const eventCity = document.getElementById('event-city').value;
+      const eventDateRaw = document.getElementById('event-date').value;
+      const eventNotes = document.getElementById('event-notes').value.trim();
+
+      let formattedDate = 'A definir';
+      if (eventDateRaw) {
+        const parts = eventDateRaw.split('-');
+        if (parts.length === 3) {
+          formattedDate = `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+      }
+
+      let message = `Olá *Rosa*! Vim pelo site da *Waltinho & Banda / WM Produções* e gostaria de solicitar um orçamento:\n\n`;
+      message += `🎉 *Evento:* ${eventType}\n`;
+      message += `📍 *Cidade:* ${eventCity}\n`;
+      message += `📅 *Data prevista:* ${formattedDate}\n`;
+
+      if (selectedItems.size > 0) {
+        message += `\n🎛️ *Estrutura & Atrações selecionadas:*\n`;
+        selectedItems.forEach(item => {
+          message += `✅ ${item.name}\n`;
+        });
+      } else {
+        message += `\n🎛️ *Estrutura:* Gostaria de ajuda para montar o pacote ideal.\n`;
+      }
+
+      if (eventNotes) {
+        message += `\n📝 *Observações:* ${eventNotes}\n`;
+      }
+
+      message += `\nAguardo o retorno sobre disponibilidade e valores!`;
+
+      const encoded = encodeURIComponent(message);
+      const waUrl = `https://wa.me/5593991997960?text=${encoded}`;
+      window.open(waUrl, '_blank', 'noopener,noreferrer');
+    }
+
+    document.getElementById('send-whatsapp-btn').addEventListener('click', sendOrderToRosaWhatsApp);
+
+    // Eventos do Botão Flutuante Inteligente
+    document.getElementById('floating-scroll-btn').addEventListener('click', () => {
+      document.getElementById('simulador').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    floatingActionBtn.addEventListener('click', () => {
+      if (selectedItems.size > 0) {
+        sendOrderToRosaWhatsApp();
+      } else {
+        document.getElementById('simulador').scrollIntoView({ behavior: 'smooth' });
+      }
+    });
+
+    // ---------------------------------------------------------
+    // 3. REPERTÓRIO INTERATIVO DA BANDA
+    // ---------------------------------------------------------
+    const genresData = {
+      axe: {
+        title: 'Axé, Swingueira & Marchinhas de Carnaval',
+        moment: 'Pico da Festa',
+        desc: 'Ninguém fica parado! Dos clássicos do axé das antigas até os hits atuais de trio elétrico, perfeito para levantar a pista em casamentos, formaturas, blocos e festas de carnaval.',
+        gear: 'Bazucas de Fumaça + Telão de LED + Banda Completa'
+      },
+      sertanejo: {
+        title: 'Sertanejo Universitário, Modão & Arrocha',
+        moment: 'Cantar Junto',
+        desc: 'Repertório atualizado com o que todo mundo canta junto, misturando o sertanejo romântico, modão apaixonado e aquele arrocha envolvente.',
+        gear: 'Sonorização Completa + Iluminação Cênica'
+      },
+      forro: {
+        title: 'Forró Pé-de-Serra, Estilizado & Brega Marcante',
+        moment: 'Identidade Regional',
+        desc: 'O melhor da música do Norte e Nordeste! Do forró para dançar coladinho aos clássicos do brega paraense que emocionam e agitam qualquer festa.',
+        gear: 'Banda Completa ou Reduzida + Pista Paris'
+      },
+      poprock: {
+        title: 'Pop & Rock Nacional e Internacional',
+        moment: 'Receptivo & Pista',
+        desc: 'Ideal para abrir a noite com classe ou agitar públicos variados, passando pelos grandes hinos do rock brasileiro e hits internacionais.',
+        gear: 'Iluminação DMX + Sonorização de Alta Definição'
+      },
+      pagode: {
+        title: 'Pagode 90, Samba & Roda de Samba',
+        moment: 'Descontração Total',
+        desc: 'Clima de alegria para confraternizações, aniversários e tardes festivas, com percussão marcante e sucessos que atravessam gerações.',
+        gear: 'Banda Reduzida ou Completa + Som Ambiente'
+      },
+      flashback: {
+        title: 'Flashback, Disco & Anos 80 / 90',
+        moment: 'Nostalgia na Pista',
+        desc: 'Os maiores sucessos dançantes das décadas de 70, 80 e 90 para unir pais, filhos e amigos na mesma pista de dança.',
+        gear: 'Pista Paris + Máquina de Fumaça + DJ / Banda'
+      }
+    };
+
+    const genreBtns = document.querySelectorAll('.genre-btn');
+    genreBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const gKey = btn.dataset.genre;
+        const gData = genresData[gKey];
+
+        genreBtns.forEach(b => {
+          b.classList.remove('active', 'bg-gradient-to-r', 'from-stage-blue', 'to-stage-purple', 'text-white', 'shadow-md');
+          b.classList.add('bg-white/5', 'text-zinc-300', 'border', 'border-white/10');
+        });
+        btn.classList.add('active', 'bg-gradient-to-r', 'from-stage-blue', 'to-stage-purple', 'text-white', 'shadow-md');
+        btn.classList.remove('bg-white/5', 'text-zinc-300', 'border', 'border-white/10');
+
+        document.getElementById('genre-title').textContent = gData.title;
+        document.getElementById('genre-moment').textContent = gData.moment;
+        document.getElementById('genre-desc').textContent = gData.desc;
+        document.getElementById('genre-gear').textContent = gData.gear;
+      });
+    });
+
+    // ---------------------------------------------------------
+    // 4. DEPOIMENTOS DE CLIENTES E NOIVOS (COM LOCALSTORAGE)
+    // ---------------------------------------------------------
+    const REVIEWS_STORAGE_KEY = 'wm_producoes_depoimentos_v2';
+
+    const defaultReviews = [
+      {
+        id: 'rev-1',
+        name: 'Marcilene Pereira',
+        event: 'Formatura',
+        city: 'Santarém',
+        rating: 5,
+        tag: 'Avaliação Google • Local Guide',
+        message: 'Super indico para quem deseja ter a melhor festa, a minha foi de formatura, excelente seleção musical, super animados.',
+        date: '21 de mai. de 2024',
+        isUserSubmitted: false
+      },
+      {
+        id: 'rev-2',
+        name: 'Helenice (Mãe da Vitória Gomes)',
+        event: '15 Anos',
+        city: 'Santarém',
+        rating: 5,
+        tag: '15 Anos da Vitória Gomes',
+        message: 'Sua banda é muito boa, parabéns pelo show!',
+        date: 'Cliente Verificada',
+        isUserSubmitted: false
+      },
+      {
+        id: 'rev-3',
+        name: 'Natália & Solano',
+        event: 'Casamento',
+        city: 'Santarém',
+        rating: 5,
+        tag: 'Casamento • Show & Produção',
+        message: 'Passando pra agradecer ao trabalho impecável de vocês, a banda foi simplesmente um show. Maravilhosa, muito obrigado por todo apoio e profissionalismo.',
+        date: 'Noivos Verificados',
+        isUserSubmitted: false
+      },
+      {
+        id: 'rev-4',
+        name: 'Larissa & Matheus',
+        event: 'Casamento',
+        city: 'Santarém',
+        rating: 5,
+        tag: 'Formatura & Casamento',
+        message: 'A melhor banda da cidade. Na formatura, no casamento e nas demais oportunidades que virão sempre será com eles.',
+        date: 'Noivos Verificados',
+        isUserSubmitted: false
+      }
+    ];
+
+    function loadReviews() {
+      try {
+        const saved = localStorage.getItem(REVIEWS_STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            return [...parsed, ...defaultReviews];
+          }
+        }
+      } catch (e) {
+        // Fallback seguro
+      }
+      return [...defaultReviews];
+    }
+
+    function saveUserReview(newReview) {
+      try {
+        const saved = localStorage.getItem(REVIEWS_STORAGE_KEY);
+        const existing = saved ? JSON.parse(saved) : [];
+        existing.unshift(newReview);
+        localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(existing));
+      } catch (e) {
+        // Ignora erro de quota
+      }
+    }
+
+    function escapeHTML(str) {
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    const reviewsGrid = document.getElementById('reviews-grid');
+    const reviewsCountEl = document.getElementById('reviews-count');
+    let allReviews = loadReviews();
+
+    function renderReviews() {
+      reviewsGrid.innerHTML = '';
+      reviewsCountEl.textContent = allReviews.length;
+
+      allReviews.forEach(rev => {
+        const starsHtml = Array.from({ length: 5 }, (_, idx) => {
+          const filled = idx < rev.rating;
+          return `<i data-lucide="star" class="w-3.5 h-3.5 ${filled ? 'fill-stage-gold text-stage-gold' : 'text-zinc-600'}"></i>`;
+        }).join('');
+
+        const card = document.createElement('article');
+        card.className = 'review-card-enter rounded-2xl bg-[#101018] border border-white/10 hover:border-white/20 p-5 flex flex-col justify-between gap-4 transition-colors';
+        
+        const tagBadge = rev.tag
+          ? `<span class="inline-block font-mono text-[10px] px-2.5 py-1 rounded-lg bg-stage-purple/15 text-purple-300 border border-stage-purple/30">${escapeHTML(rev.tag)}</span>`
+          : `<span class="inline-block font-mono text-[10px] px-2.5 py-1 rounded-lg bg-stage-pink/15 text-pink-300 border border-stage-pink/30">Avaliação verificada no mural</span>`;
+
+        card.innerHTML = `
+          <div class="space-y-3">
+            <div class="flex items-center justify-between gap-2">
+              <div class="flex items-center gap-1">${starsHtml}</div>
+              <span class="font-mono text-[11px] text-zinc-400">${escapeHTML(rev.event)} • ${escapeHTML(rev.city)}</span>
+            </div>
+            <p class="text-sm text-zinc-200 leading-relaxed">“${escapeHTML(rev.message)}”</p>
+          </div>
+          <div class="pt-3 border-t border-white/10 flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <h4 class="font-display font-bold text-sm text-white">${escapeHTML(rev.name)}</h4>
+              <span class="font-mono text-[10px] text-zinc-500">${escapeHTML(rev.date)}</span>
+            </div>
+            ${tagBadge}
+          </div>
+        `;
+        reviewsGrid.appendChild(card);
+      });
+
+      lucide.createIcons();
+    }
+
+    renderReviews();
+
+    // Controle interativo de estrelas do formulário
+    let selectedStarRating = 5;
+    const starBtns = document.querySelectorAll('.star-pick-btn');
+    const starLabel = document.getElementById('star-rating-label');
+    const starDescriptions = {
+      1: '1.0 / Regular',
+      2: '2.0 / Razoável',
+      3: '3.0 / Bom',
+      4: '4.0 / Muito Bom',
+      5: '5.0 / Excelente'
+    };
+
+    function updateStarPickerUI(rating) {
+      starBtns.forEach(btn => {
+        const val = Number(btn.dataset.star);
+        const icon = btn.querySelector('svg, i');
+        if (val <= rating) {
+          btn.classList.add('text-stage-gold');
+          btn.classList.remove('text-zinc-600');
+          if (icon) icon.classList.add('fill-stage-gold');
+        } else {
+          btn.classList.remove('text-stage-gold');
+          btn.classList.add('text-zinc-600');
+          if (icon) icon.classList.remove('fill-stage-gold');
+        }
+      });
+      starLabel.textContent = starDescriptions[rating] || '5.0 / Excelente';
+    }
+
+    starBtns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectedStarRating = Number(btn.dataset.star);
+        updateStarPickerUI(selectedStarRating);
+      });
+    });
+
+    // Submissão do novo depoimento
+    document.getElementById('review-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById('rev-name');
+      const eventInput = document.getElementById('rev-event');
+      const cityInput = document.getElementById('rev-city');
+      const messageInput = document.getElementById('rev-message');
+
+      const name = nameInput.value.trim();
+      const eventType = eventInput.value;
+      const city = cityInput.value.trim();
+      const message = messageInput.value.trim();
+
+      if (!name || !city || !message) return;
+
+      const today = new Date();
+      const formattedToday = today.toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
+      const newReview = {
+        id: 'rev-' + Date.now(),
+        name,
+        event: eventType,
+        city,
+        rating: selectedStarRating,
+        tag: `${eventType} em ${city}`,
+        message,
+        date: `Publicado em ${formattedToday}`,
+        isUserSubmitted: true
+      };
+
+      saveUserReview(newReview);
+      allReviews.unshift(newReview);
+      renderReviews();
+
+      nameInput.value = '';
+      cityInput.value = '';
+      messageInput.value = '';
+      selectedStarRating = 5;
+      updateStarPickerUI(5);
+
+      showToast('Obrigado! Seu depoimento foi publicado no mural.');
+    });
+
+    // ---------------------------------------------------------
+    // 5. COPIAR TELEFONE DA ROSA
+    // ---------------------------------------------------------
+    document.getElementById('copy-phone-btn').addEventListener('click', () => {
+      const phone = '93991997960';
+      const tempInput = document.createElement('input');
+      tempInput.value = phone;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      document.execCommand('copy');
+      document.body.removeChild(tempInput);
+      showToast('Número (93) 99199-7960 copiado!');
+    });
+  </script>
+</body>
+</html>
